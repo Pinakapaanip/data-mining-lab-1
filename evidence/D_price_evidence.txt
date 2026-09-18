@@ -1,7 +1,0 @@
-PART D COMPLETE
-REPORT PERIOD: [2024-03-01, 2024-04-01)
-SELECTED PRODUCT: Anmol Cream Biscuit 100g (P103372)
-SELLING PRICE REVISION: 43.95
-REVISION EFFECTIVE: 2022-01-01 00:00:00 to 2024-07-14 00:00:00
-OVERLAPPING BISCUIT REVISIONS: 29
-LOOKUP: product_code plus effective_from/effective_to overlap; change only report_start/report_end
