@@ -1,0 +1,31 @@
+{
+  "seed": 20240917,
+  "notices": 12000,
+  "opportunities": 5776,
+  "cluster_size_hist": {
+    "1": 3350,
+    "2": 901,
+    "3": 604,
+    "4": 321,
+    "5": 247,
+    "6": 139,
+    "7": 95,
+    "8": 53,
+    "9": 66
+  },
+  "true_duplicate_pairs": 15049,
+  "total_possible_pairs": 71994000,
+  "nodal_portals": [
+    "P001",
+    "P002",
+    "P003",
+    "P004",
+    "P005",
+    "P006"
+  ],
+  "notices_from_nodal": 4665,
+  "label_same": 279,
+  "label_different": 621,
+  "base_rate_in_corpus": 0.00020903130816456926,
+  "base_rate_in_labels": 0.31
+}

@@ -1,0 +1,152 @@
+PART E COMPLETE
+SALES SOURCE: s3://annapurna-sales/daily_sales/**/*.parquet
+MASTER SOURCE: C:\Users\ub02-glab-013\Downloads\dara_2_real\data_lake\masters.sqlite
+JOIN LOCATION: DuckDB
+PRUNING FILTER: _store=S01 and _business_date in 20240101..20240131
+HTTPFS/MINIO: ACTIVE
+
+
+FEDERATED RESULT:
+category_id  line_count   revenue
+        C01         425  56644.67
+        C02         519 343581.69
+        C03         421 201133.95
+        C04         562 911088.82
+        C05         467 680262.48
+        C06         411 146930.44
+        C07         381 299684.04
+        C08         385 236027.27
+        C09         491 734495.55
+        C10         519 259225.04
+        C11         480 104981.69
+        C12         427 110469.45
+        C13         391 126894.94
+        C14         463 208958.63
+EXPLAIN ANALYZE:
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+EXPLAIN ANALYZE          SELECT p.category_id, COUNT(*) AS line_count,                SUM(CAST(s.qty AS DOUBLE) * CAST(s.unit_price AS DOUBLE)) AS revenue         FROM read_parquet('s3://annapurna-sales/daily_sales/**/*.parquet', hive_partitioning=true, union_by_name=true) s         JOIN masters.products p ON p.product_code = s.product_code           AND strptime(CAST(s._business_date AS VARCHAR), '%Y%m%d')::DATE >= p.valid_from           AND strptime(CAST(s._business_date AS VARCHAR), '%Y%m%d')::DATE < p.valid_to         WHERE upper(s.line_type) IN ('SALE', 'RETURN', 'DISCOUNT', 'VOID')           AND s._store = 'S01' AND s._business_date >= '20240101' AND s._business_date < '20240201'         GROUP BY p.category_id ORDER BY p.category_id     
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││         HTTPFS HTTP Stats         ││
+││                                   ││
+││            in: 3.9 MiB            ││
+││            out: 0 bytes           ││
+││              #HEAD: 0             ││
+││             #GET: 724             ││
+││              #PUT: 0              ││
+││              #POST: 0             ││
+││             #DELETE: 0            ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││              Total Time: 0.537s              ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│                           │
+│           0 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│          ORDER_BY         │
+│    ────────────────────   │
+│     p.category_id ASC     │
+│                           │
+│                           │
+│                           │
+│          14 rows          │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│       HASH_GROUP_BY       │
+│    ────────────────────   │
+│         Groups: #0        │
+│                           │
+│        Aggregates:        │
+│        count_star()       │
+│          sum(#1)          │
+│                           │
+│                           │
+│                           │
+│          14 rows          │
+│           0.04s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         PROJECTION        │
+│    ────────────────────   │
+│        category_id        │
+│   (CAST(qty AS DOUBLE) *  │
+│         unit_price)       │
+│                           │
+│                           │
+│                           │
+│         6,342 rows        │
+│           0.00s           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         HASH_JOIN         │
+│    ────────────────────   │
+│      Join Type: INNER     │
+│                           │
+│        Conditions:        │
+│product_code = product_code│
+│       CAST(strptime       │
+│ (_business_date, '%Y%m%d')│
+│   AS DATE) >= valid_from  ├──────────────┐
+│       CAST(strptime       │              │
+│ (_business_date, '%Y%m%d')│              │
+│     AS DATE) < valid_to   │              │
+│                           │              │
+│                           │              │
+│                           │              │
+│         6,342 rows        │              │
+│           0.01s           │              │
+└─────────────┬─────────────┘              │
+┌─────────────┴─────────────┐┌─────────────┴─────────────┐
+│         TABLE_SCAN        ││         TABLE_SCAN        │
+│    ────────────────────   ││    ────────────────────   │
+│         Function:         ││      Table: products      │
+│        READ_PARQUET       ││                           │
+│                           ││           File:           │
+│        Projections:       ││   C:/Users/ub02-glab-013  │
+│        product_code       ││   /Downloads/dara_2_real  │
+│       _business_date      ││ /data_lake/masters.sqlite │
+│            qty            ││                           │
+│         unit_price        ││        Projections:       │
+│                           ││        product_code       │
+│          Filters:         ││         valid_from        │
+│ _business_date>='20240101'││          valid_to         │
+│     AND _business_date<   ││        category_id        │
+│         '20240201'        ││                           │
+│   (upper(line_type) IN (  ││                           │
+│     'SALE', 'RETURN',     ││                           │
+│    'DISCOUNT', 'VOID'))   ││                           │
+│        _store='S01'       ││           0.00s           │
+│                           ││                           │
+│      Dynamic Filters:     ││                           │
+│  optional: product_code>= ││                           │
+│  'P100005' AND optional:  ││                           │
+│   product_code<='P108397' ││                           │
+│                           ││                           │
+│   Total Files Read: 723   ││                           │
+│                           ││                           │
+│        Filename(s):       ││                           │
+│    s3://annapurna-sales   ││                           │
+│ /daily_sales/**/*.parquet,││                           │
+│             ...           ││                           │
+│                           ││                           │
+│                           ││                           │
+│                           ││                           │
+│         6,342 rows        ││         1,224 rows        │
+│           2.15s           ││          (0.00s)          │
+└───────────────────────────┘└───────────────────────────┘

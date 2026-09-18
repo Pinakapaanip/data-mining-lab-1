@@ -1,0 +1,7 @@
+
+data_lake/
+*.csv
+*.duckdb
+*.sqlite
+*.zip
+.venv/
