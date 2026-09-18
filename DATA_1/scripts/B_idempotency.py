@@ -1,4 +1,4 @@
-from utils import LAKE, canonicalize, load_raw_sales, sha256, write_evidence
+from DATA_1.scripts.utils import LAKE, canonicalize, load_raw_sales, sha256, write_evidence
 
 
 def run_once(raw, read_stats: dict[str, int]) -> tuple[int, str, dict[str, int]]:

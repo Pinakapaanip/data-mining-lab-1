@@ -7,7 +7,7 @@ import urllib3
 from minio import Minio
 from minio.error import S3Error
 
-from utils import LAKE, MINIO_BUCKET, MINIO_ENDPOINT, parse_filename, read_sales_file, reset_dir, sales_files, write_evidence
+from DATA_1.scripts.utils import LAKE, MINIO_BUCKET, MINIO_ENDPOINT, parse_filename, read_sales_file, reset_dir, sales_files, write_evidence
 
 
 def main() -> None:

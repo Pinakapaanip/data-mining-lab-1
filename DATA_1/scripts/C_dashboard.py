@@ -1,6 +1,6 @@
 import duckdb
 
-from utils import LAKE, load_masters, write_evidence
+from DATA_1.scripts.utils import LAKE, load_masters, write_evidence
 
 
 QUERY = """

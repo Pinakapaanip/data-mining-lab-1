@@ -2,7 +2,7 @@ import urllib.request
 
 import duckdb
 
-from utils import LAKE, MINIO_BUCKET, MINIO_ENDPOINT, ensure_sqlite_masters, write_evidence
+from DATA_1.scripts.utils import LAKE, MINIO_BUCKET, MINIO_ENDPOINT, ensure_sqlite_masters, write_evidence
 
 
 def minio_available() -> bool:
